@@ -1,0 +1,188 @@
+import React, { useState, useCallback } from 'react';
+import { usePortfolio } from '../context/PortfolioContext';
+import type { Project } from '../types';
+
+// Visual card used for static graphic design and 3D render projects.
+const ImageCard: React.FC<{ project: Project }> = ({ project }) => {
+    return (
+        <div className="bg-slate-800 rounded-xl overflow-hidden group transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-500/20 hover:-translate-y-2 relative cursor-pointer">
+            <img 
+                src={project.image} 
+                alt={project.title} 
+                className="w-full h-full object-cover aspect-[4/3] group-hover:scale-110 transition-transform duration-500" 
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-6 flex flex-col justify-end">
+                <h3 className="text-xl font-bold text-white mb-1 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 ease-in-out">{project.title}</h3>
+                <p className="text-cyan-400 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">{project.category}</p>
+            </div>
+        </div>
+    );
+};
+
+
+// The original card, now used for detailed projects like websites and engineering.
+const ProjectCard: React.FC<{ project: Project; onCardClick?: (project: Project) => void }> = ({ project, onCardClick }) => {
+    const isClickable = Boolean(onCardClick && project.liveUrl && project.liveUrl !== '#');
+
+    const handleCardClick = () => {
+        if (isClickable) {
+            onCardClick?.(project);
+        }
+    };
+
+    const handleCardKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+        if (!isClickable) {
+            return;
+        }
+
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            onCardClick?.(project);
+        }
+    };
+
+    return (
+        <div
+            className={`bg-slate-800 rounded-xl overflow-hidden group transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-500/10 hover:-translate-y-2 flex flex-col ${
+                isClickable ? 'cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500' : ''
+            }`}
+            onClick={handleCardClick}
+            onKeyDown={handleCardKeyDown}
+            role={isClickable ? 'link' : undefined}
+            tabIndex={isClickable ? 0 : undefined}
+            aria-label={isClickable ? `Open ${project.title}` : undefined}
+        >
+            <div className="relative overflow-hidden">
+                <img src={project.image} alt={project.title} className="w-full object-cover aspect-[4/3] group-hover:scale-110 transition-transform duration-500" />
+                <div className="absolute inset-0 bg-black/40"></div>
+            </div>
+            <div className="p-6 flex flex-col flex-grow">
+                <h3 className="text-xl font-bold text-white mb-2">{project.title}</h3>
+                <p className="text-slate-400 mb-4 text-sm leading-relaxed">{project.description}</p>
+                <div className="flex flex-wrap gap-2 mb-4">
+                    {project.tags.map(tag => (
+                        <span key={tag} className="bg-slate-700 text-cyan-400 text-xs font-semibold px-2.5 py-1 rounded-full">
+                            {tag}
+                        </span>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// Dedicated card for video projects so visitors can play clips inline.
+const VideoCard: React.FC<{ project: Project }> = ({ project }) => {
+    return (
+        <div className="bg-slate-800 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-500/10 hover:-translate-y-2 flex flex-col">
+            <div className="relative overflow-hidden bg-black">
+                {project.videoUrl ? (
+                    <video
+                        src={project.videoUrl}
+                        poster={project.image}
+                        controls
+                        className="w-full aspect-video object-cover"
+                    />
+                ) : (
+                    <img src={project.image} alt={project.title} className="w-full aspect-video object-cover" />
+                )}
+            </div>
+            <div className="p-6 flex flex-col flex-grow">
+                <h3 className="text-xl font-bold text-white mb-2">{project.title}</h3>
+                <p className="text-slate-400 mb-4 text-sm leading-relaxed">{project.description}</p>
+                <div className="flex flex-wrap gap-2 mb-4">
+                    {project.tags.map(tag => (
+                        <span key={tag} className="bg-slate-700 text-cyan-400 text-xs font-semibold px-2.5 py-1 rounded-full">
+                            {tag}
+                        </span>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const Projects: React.FC = () => {
+    const { portfolioData } = usePortfolio();
+    const baseProjects = Array.isArray(portfolioData.projects) ? portfolioData.projects : [];
+    const videos = Array.isArray(portfolioData.videos) ? portfolioData.videos : [];
+    const videoProjects: Project[] = videos.map(video => ({
+        title: video.title,
+        description: video.description,
+        image: video.thumbnailUrl ?? '',
+        category: 'Video Editing',
+        tags: [],
+        repoUrl: '',
+        liveUrl: undefined,
+        videoUrl: video.videoUrl,
+    }));
+    const projects = [...baseProjects, ...videoProjects];
+
+    const categories = ['All', 'Graphic Design', '3D Renders', 'Websites', 'Video Editing', 'Engineering'];
+    const [activeCategory, setActiveCategory] = useState('All');
+
+    const imageOnlyCategories = ['Graphic Design', '3D Renders'];
+
+    const openProjectLink = useCallback((proj: Project) => {
+        if (!proj.liveUrl || proj.liveUrl === '#') {
+            return;
+        }
+
+        if (typeof window !== 'undefined') {
+            window.open(proj.liveUrl, '_blank', 'noopener,noreferrer');
+        }
+    }, []);
+
+    const filteredProjects = projects.filter(project =>
+        activeCategory === 'All' ? true : project.category === activeCategory
+    );
+
+    return (
+        <section id="projects" className="py-20 md:py-32">
+            <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">Featured Projects</h2>
+            <p className="text-slate-400 text-center mb-8 max-w-2xl mx-auto">
+                Here are some of the projects I'm proud of. Each one represents a challenge I was excited to tackle.
+            </p>
+            
+            <div className="flex flex-wrap justify-center gap-2 md:gap-4 mb-12">
+                {categories.map(category => (
+                    <button
+                        key={category}
+                        onClick={() => setActiveCategory(category)}
+                        className={`px-4 py-2 text-sm font-semibold rounded-full transition-all duration-300 ${
+                            activeCategory === category
+                                ? 'bg-cyan-500 text-white shadow-md shadow-cyan-500/20'
+                                : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                        }`}
+                    >
+                        {category}
+                    </button>
+                ))}
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {filteredProjects.map((project) => {
+                    if (imageOnlyCategories.includes(project.category)) {
+                        return <ImageCard key={project.title} project={project} />;
+                    }
+
+                    if (project.category === 'Video Editing') {
+                        return <VideoCard key={project.title} project={project} />;
+                    }
+
+                    const isWebsite = project.category === 'Websites' && project.liveUrl && project.liveUrl !== '#';
+
+                    return (
+                        <ProjectCard
+                            key={project.title}
+                            project={project}
+                            onCardClick={isWebsite ? openProjectLink : undefined}
+                        />
+                    );
+                })}
+            </div>
+        </section>
+    );
+};
+
+export default Projects;
