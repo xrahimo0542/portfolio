@@ -31,7 +31,7 @@ export const DEFAULT_PORTFOLIO_DATA: PortfolioData = {
         { name: 'ANSYS' },
         { name: 'MATLAB' },
         { name: 'Blender' },
-        { name: 'AutoCAD' },
+        { name: 'nTOPOLOGY' },
         { name: 'Illustrator' },
         { name: 'Photoshop' },
         { name: 'Premiere Pro' },
