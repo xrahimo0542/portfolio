@@ -199,6 +199,17 @@ export const DEFAULT_PORTFOLIO_DATA: PortfolioData = {
             liveUrl: '',
             repoUrl: '#',
         },
+        {
+            title: 'Engineering Design Project',
+            description: 'A comprehensive engineering project showcasing various design iterations and 3D models created using SOLIDWORKS and Blender.',
+            images: [
+                new URL('./pics/asa.png', import.meta.url).href,
+                new URL('./pics/aa.png', import.meta.url).href,            ],
+            category: 'Engineering',
+            tags: ['SOLIDWORKS', 'nTOPOLOGY', '3D Modeling', 'Engineering Design'],
+            liveUrl: '',
+            repoUrl: '#',
+        },
     ],
     videos: [],
     
