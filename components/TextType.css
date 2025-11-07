@@ -1,0 +1,22 @@
+.text-type {
+  display: inline-flex;
+  align-items: center;
+}
+
+.text-type__content {
+  white-space: pre-wrap;
+}
+
+.text-type__cursor {
+  display: inline-block;
+  margin-left: 2px;
+}
+
+/* Ensure cursor is bold even if Tailwind classes aren't applied */
+.text-type__cursor {
+  font-weight: 700;
+}
+
+.text-type__cursor--hidden {
+  opacity: 0 !important;
+}
