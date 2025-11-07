@@ -1,5 +1,6 @@
 import React from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
+import BlurText from './BlurText';
 
 const About: React.FC = () => {
   const { portfolioData } = usePortfolio();
@@ -16,7 +17,7 @@ const About: React.FC = () => {
         </div>
         <div className="md:col-span-3">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            About Me
+            <BlurText text="About Me" />
           </h2>
           <p className="text-slate-400 mb-4 leading-relaxed">
             {about.p1}
