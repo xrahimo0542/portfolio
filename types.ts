@@ -7,7 +7,8 @@ export interface Skill {
 export interface Project {
   title:string;
   description: string;
-  image: string;
+  image?: string;
+  images?: string[];
   category: string;
   tags: string[];
   liveUrl?: string;

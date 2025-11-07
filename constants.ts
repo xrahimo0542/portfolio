@@ -58,8 +58,8 @@ export const DEFAULT_PORTFOLIO_DATA: PortfolioData = {
             title: 'Abstract Orbital Camera Lens',
             description: 'A conceptual 3D model exploring intricate mechanical designs, focusing on reflective surfaces, depth of field, and abstract aesthetics.',
             image: new URL('./pics/shooting1.png', import.meta.url).href,
-            category: 'Graphic Design',
-            tags: ['Photoshop', 'Illustrator', 'Branding', 'Social Media'],
+            category: '3D Renders',
+            tags: ['Blender', '3D Modeling', 'Rendering', 'Texturing'],
             repoUrl: '#',
         },
         {
@@ -137,7 +137,21 @@ export const DEFAULT_PORTFOLIO_DATA: PortfolioData = {
             liveUrl: 'https://dzairsale-pt.com/',
             repoUrl: '#',
         },
-
+        {
+    title: '',
+    description: '',
+    images: [
+        new URL('./pics/WhatsApp Image 2025-10-30 à 20.47.42_bd4cf888.jpg', import.meta.url).href,
+        new URL('./pics/WhatsApp Image 2025-10-30 à 20.47.42_185f0cc5.jpg', import.meta.url).href,
+        new URL('./pics/WhatsApp Image 2025-10-30 à 20.47.42_8f5b7418.jpg', import.meta.url).href,
+        new URL('./pics/Untitled.png', import.meta.url).href,
+        new URL('./pics/WhatsApp Image 2025-10-30 à 20.47.42_7a15b019.jpg', import.meta.url).href
+    ],
+    category: 'Websites',
+    tags: ['SOLIDWORKS', 'Blender'],
+    liveUrl: '',
+    repoUrl: '#',
+},
     ],
     videos: [
     

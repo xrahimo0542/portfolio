@@ -23,6 +23,7 @@ const ImageCard: React.FC<{ project: Project }> = ({ project }) => {
 // The original card, now used for detailed projects like websites and engineering.
 const ProjectCard: React.FC<{ project: Project; onCardClick?: (project: Project) => void }> = ({ project, onCardClick }) => {
     const isClickable = Boolean(onCardClick && project.liveUrl && project.liveUrl !== '#');
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
     const handleCardClick = () => {
         if (isClickable) {
@@ -41,6 +42,20 @@ const ProjectCard: React.FC<{ project: Project; onCardClick?: (project: Project)
         }
     };
 
+    const nextImage = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (project.images && project.images.length > 0) {
+            setCurrentImageIndex((prev) => (prev + 1) % project.images!.length);
+        }
+    };
+
+    const prevImage = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (project.images && project.images.length > 0) {
+            setCurrentImageIndex((prev) => (prev - 1 + project.images!.length) % project.images!.length);
+        }
+    };
+
     return (
         <div
             className={`bg-slate-800 rounded-xl overflow-hidden group transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-500/10 hover:-translate-y-2 flex flex-col ${
@@ -53,7 +68,39 @@ const ProjectCard: React.FC<{ project: Project; onCardClick?: (project: Project)
             aria-label={isClickable ? `Open ${project.title}` : undefined}
         >
             <div className="relative overflow-hidden">
-                <img src={project.image} alt={project.title} className="w-full object-cover aspect-[4/3] group-hover:scale-110 transition-transform duration-500" />
+                <img 
+                    src={project.images ? project.images[currentImageIndex] : project.image} 
+                    alt={project.title} 
+                    className="w-full object-cover aspect-[4/3] group-hover:scale-110 transition-transform duration-500" 
+                />
+                {project.images && project.images.length > 1 && (
+                    <>
+                        <button 
+                            onClick={prevImage}
+                            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                            aria-label="Previous image"
+                        >
+                            ←
+                        </button>
+                        <button 
+                            onClick={nextImage}
+                            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                            aria-label="Next image"
+                        >
+                            →
+                        </button>
+                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+                            {project.images.map((_, index) => (
+                                <div 
+                                    key={index}
+                                    className={`w-2 h-2 rounded-full ${
+                                        index === currentImageIndex ? 'bg-white' : 'bg-white/50'
+                                    }`}
+                                />
+                            ))}
+                        </div>
+                    </>
+                )}
                 <div className="absolute inset-0 bg-black/40"></div>
             </div>
             <div className="p-6 flex flex-col flex-grow">
