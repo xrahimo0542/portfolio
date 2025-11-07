@@ -1,21 +1,81 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
+import ImageModal from './ImageModal';
 import { usePortfolio } from '../context/PortfolioContext';
 import type { Project } from '../types';
 
 // Visual card used for static graphic design and 3D render projects.
 const ImageCard: React.FC<{ project: Project }> = ({ project }) => {
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const nextImage = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (project.images && project.images.length > 0) {
+            setCurrentImageIndex((prev) => (prev + 1) % project.images!.length);
+        }
+    };
+
+    const prevImage = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (project.images && project.images.length > 0) {
+            setCurrentImageIndex((prev) => (prev - 1 + project.images!.length) % project.images!.length);
+        }
+    };
+
+    const handleImageClick = () => {
+        setIsModalOpen(true);
+    };
+
     return (
-        <div className="bg-slate-800 rounded-xl overflow-hidden group transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-500/20 hover:-translate-y-2 relative cursor-pointer">
-            <img 
-                src={project.image} 
-                alt={project.title} 
-                className="w-full h-full object-cover aspect-[4/3] group-hover:scale-110 transition-transform duration-500" 
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-6 flex flex-col justify-end">
-                <h3 className="text-xl font-bold text-white mb-1 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 ease-in-out">{project.title}</h3>
-                <p className="text-cyan-400 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">{project.category}</p>
+        <>
+            <div className="bg-slate-800 rounded-xl overflow-hidden group transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-500/20 hover:-translate-y-2 relative cursor-pointer" onClick={handleImageClick}>
+                <div className="relative">
+                    <img 
+                        src={project.images ? project.images[currentImageIndex] : project.image} 
+                        alt={project.title} 
+                        className="w-full h-full object-cover aspect-[4/3] group-hover:scale-110 transition-transform duration-500" 
+                    />
+                    {project.images && project.images.length > 1 && (
+                        <>
+                            <button 
+                                onClick={prevImage}
+                                className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                                aria-label="Previous image"
+                            >
+                                ←
+                            </button>
+                            <button 
+                                onClick={nextImage}
+                                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                                aria-label="Next image"
+                            >
+                                →
+                            </button>
+                            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 z-10">
+                                {project.images.map((_, index) => (
+                                    <div 
+                                        key={index}
+                                        className={`w-2 h-2 rounded-full ${
+                                            index === currentImageIndex ? 'bg-white' : 'bg-white/50'
+                                        }`}
+                                    />
+                                ))}
+                            </div>
+                        </>
+                    )}
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-6 flex flex-col justify-end">
+                    <h3 className="text-xl font-bold text-white mb-1 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 ease-in-out">{project.title}</h3>
+                    <p className="text-cyan-400 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">{project.category}</p>
+                </div>
             </div>
-        </div>
+            <ImageModal 
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                imageUrl={project.images ? project.images[currentImageIndex] : project.image!}
+                alt={project.title}
+            />
+        </>
     );
 };
 
@@ -118,61 +178,7 @@ const ProjectCard: React.FC<{ project: Project; onCardClick?: (project: Project)
     );
 };
 
-// Dedicated card for video projects so visitors can play clips inline.
-const VideoCard: React.FC<{ project: Project }> = ({ project }) => {
-    const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
-    const handleMetadata = (event: React.SyntheticEvent<HTMLVideoElement>) => {
-        const video = event.currentTarget;
-        if (!video.videoWidth || !video.videoHeight) {
-            return;
-        }
-        setDimensions({
-            width: video.videoWidth,
-            height: video.videoHeight,
-        });
-    };
-
-    const aspectRatio = dimensions.width && dimensions.height
-        ? dimensions.width / dimensions.height
-        : undefined;
-
-    return (
-        <div className="bg-slate-800 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-500/10 hover:-translate-y-2">
-            <div
-                className="relative overflow-hidden bg-black"
-                style={{ aspectRatio: aspectRatio ?? 16 / 9 }}
-            >
-                {project.videoUrl ? (
-                    <video
-                        src={project.videoUrl}
-                        poster={project.image}
-                        onLoadedMetadata={handleMetadata}
-                        controls
-                        className="w-full h-full object-contain bg-black"
-                    />
-                ) : (
-                    <img src={project.image} alt={project.title} className="w-full h-full object-contain bg-black" />
-                )}
-            </div>
-            <div className="p-6 space-y-3">
-                <h3 className="text-xl font-bold text-white">{project.title}</h3>
-                {project.description?.trim() && (
-                    <p className="text-slate-400 text-sm leading-relaxed">{project.description}</p>
-                )}
-                {project.tags?.length ? (
-                    <div className="flex flex-wrap gap-2">
-                        {project.tags.map(tag => (
-                            <span key={tag} className="bg-slate-700 text-cyan-400 text-xs font-semibold px-2.5 py-1 rounded-full">
-                                {tag}
-                            </span>
-                        ))}
-                    </div>
-                ) : null}
-            </div>
-        </div>
-    );
-};
 
 const normalizeLiveUrl = (rawUrl?: string | null): string | null => {
     if (!rawUrl) {
@@ -207,23 +213,7 @@ const Projects: React.FC = () => {
         key: string;
     };
 
-    const videoItems: RenderItem[] = videos.map((video, index) => ({
-        kind: 'video',
-        key: `video-${index}-${video.videoUrl ?? video.title}`,
-        project: {
-            title: video.title,
-            description: video.description,
-            image: video.thumbnailUrl ?? '',
-            category: 'Video Editing',
-            tags: [],
-            repoUrl: '',
-            liveUrl: undefined,
-            videoUrl: video.videoUrl,
-        },
-    }));
-
-    const nonVideoItems: RenderItem[] = baseProjects
-        .filter(project => project.category !== 'Video Editing' && !project.videoUrl)
+    const projectItems: RenderItem[] = baseProjects
         .map((project, index) => ({
             kind: 'project',
             key: `project-${index}-${project.title}`,
@@ -246,14 +236,9 @@ const Projects: React.FC = () => {
         }
     }, []);
 
-    let filteredItems: RenderItem[];
-    if (activeCategory === 'All') {
-        filteredItems = [...nonVideoItems, ...videoItems];
-    } else if (activeCategory === 'Video Editing') {
-        filteredItems = videoItems;
-    } else {
-        filteredItems = nonVideoItems.filter(item => item.project.category === activeCategory);
-    }
+    let filteredItems: RenderItem[] = activeCategory === 'All' 
+        ? projectItems 
+        : projectItems.filter(item => item.project.category === activeCategory);
 
     return (
         <section id="projects" className="py-20 md:py-32">
@@ -282,17 +267,95 @@ const Projects: React.FC = () => {
                 {filteredItems.map(item => {
                     const { project } = item;
 
-                    const card = (() => {
-                        if (imageOnlyCategories.includes(project.category)) {
-                            return <ImageCard project={project} />;
-                        }
+// Video card component for video projects
+const VideoCard: React.FC<{ project: Project }> = ({ project }) => {
+    const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+    const [isPlaying, setIsPlaying] = useState(false);
+    const videoRef = useRef<HTMLVideoElement>(null);
 
-                        if (item.kind === 'video') {
+    const handleMetadata = (event: React.SyntheticEvent<HTMLVideoElement>) => {
+        const video = event.currentTarget;
+        if (!video.videoWidth || !video.videoHeight) {
+            return;
+        }
+        setDimensions({
+            width: video.videoWidth,
+            height: video.videoHeight,
+        });
+        
+        // Set random frame as thumbnail
+        if (video.duration) {
+            const randomTime = Math.random() * video.duration;
+            video.currentTime = randomTime;
+        }
+    };
+
+    const handleClick = () => {
+        if (videoRef.current) {
+            if (isPlaying) {
+                videoRef.current.pause();
+            } else {
+                videoRef.current.play();
+            }
+            setIsPlaying(!isPlaying);
+        }
+    };
+
+    const aspectRatio = dimensions.width && dimensions.height
+        ? dimensions.width / dimensions.height
+        : undefined;
+
+    return (
+        <div className="bg-slate-800 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-500/10 hover:-translate-y-2">
+            <div
+                className="relative overflow-hidden bg-black cursor-pointer"
+                style={{ aspectRatio: aspectRatio ?? 16 / 9 }}
+                onClick={handleClick}
+            >
+                <video
+                    ref={videoRef}
+                    src={project.videoUrl}
+                    onLoadedMetadata={handleMetadata}
+                    preload="metadata"
+                    className="w-full h-full object-contain bg-black"
+                />
+                {!isPlaying && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 transition-opacity hover:bg-black/40">
+                        <div className="w-16 h-16 rounded-full bg-white/25 flex items-center justify-center">
+                            <div className="w-0 h-0 border-t-8 border-t-transparent border-l-[16px] border-l-white border-b-8 border-b-transparent ml-1"/>
+                        </div>
+                    </div>
+                )}
+            </div>
+            <div className="p-6 space-y-3">
+                <h3 className="text-xl font-bold text-white">{project.title}</h3>
+                {project.description?.trim() && (
+                    <p className="text-slate-400 text-sm leading-relaxed">{project.description}</p>
+                )}
+                {project.tags?.length ? (
+                    <div className="flex flex-wrap gap-2">
+                        {project.tags.map(tag => (
+                            <span key={tag} className="bg-slate-700 text-cyan-400 text-xs font-semibold px-2.5 py-1 rounded-full">
+                                {tag}
+                            </span>
+                        ))}
+                    </div>
+                ) : null}
+            </div>
+        </div>
+    );
+};
+
+                    const card = (() => {
+                        if (project.videoUrl) {
                             return <VideoCard project={project} />;
                         }
 
-                        const isWebsite = project.category === 'Websites' && project.liveUrl && project.liveUrl !== '#';
+                        if (imageOnlyCategories.includes(project.category) || project.images) {
+                            return <ImageCard project={project} />;
+                        }
 
+                        const isWebsite = project.category === 'Websites' && project.liveUrl && project.liveUrl !== '#';
                         return <ProjectCard project={project} onCardClick={isWebsite ? openProjectLink : undefined} />;
                     })();
 

@@ -8,7 +8,6 @@ export const DEFAULT_PORTFOLIO_DATA: PortfolioData = {
         { href: '#about', label: 'About' },
         { href: '#skills', label: 'Skills' },
         { href: '#projects', label: 'Projects' },
-        { href: '#videos', label: 'Videos' },
         { href: '#experience', label: 'Experience' },
         { href: '#contact', label: 'Contact' },
     ],
@@ -138,60 +137,70 @@ export const DEFAULT_PORTFOLIO_DATA: PortfolioData = {
             repoUrl: '#',
         },
         {
-    title: '',
-    description: '',
-    images: [
-        new URL('./pics/WhatsApp Image 2025-10-30 à 20.47.42_bd4cf888.jpg', import.meta.url).href,
-        new URL('./pics/WhatsApp Image 2025-10-30 à 20.47.42_185f0cc5.jpg', import.meta.url).href,
-        new URL('./pics/WhatsApp Image 2025-10-30 à 20.47.42_8f5b7418.jpg', import.meta.url).href,
-        new URL('./pics/Untitled.png', import.meta.url).href,
-        new URL('./pics/WhatsApp Image 2025-10-30 à 20.47.42_7a15b019.jpg', import.meta.url).href
-    ],
-    category: 'Websites',
-    tags: ['SOLIDWORKS', 'Blender'],
-    liveUrl: '',
-    repoUrl: '#',
-},
-    ],
-    videos: [
-    
-        {
-            title: 'OLLA Scholar Agency Video',
-            description: '',
+            title: 'OLLA Scholar Agency Video Highlights',
+            description: 'A collection of video content showcasing OLLA Scholar Agency\'s workshops and activities.',
             videoUrl: new URL('./pics/WhatsApp Vidéo 2025-11-04 à 14.35.11_3b01d2aa.mp4', import.meta.url).href,
-            thumbnailUrl: new URL('', import.meta.url).href,
+            category: 'Video Editing',
+            tags: ['Video Editing', 'Motion Graphics', 'Social Media'],
+            repoUrl: '#',
         },
-                {
-            title: 'OLLA Scholar Agency Video',
-            description: '',
+        {
+            title: 'OLLA Scholar Agency Event Coverage',
+            description: 'Event coverage and promotional video content for OLLA Scholar Agency.',
             videoUrl: new URL('./pics/finall.mp4', import.meta.url).href,
-            thumbnailUrl: new URL('', import.meta.url).href,
+            category: 'Video Editing',
+            tags: ['Video Production', 'Event Coverage', 'Social Media'],
+            repoUrl: '#',
         },
-                {
-            title: 'OLLA Scholar Agency Video',
-            description: '',
+        {
+            title: 'OLLA Scholar Promotional Video',
+            description: 'Promotional video content highlighting OLLA Scholar Agency\'s mission and activities.',
             videoUrl: new URL('./pics/final.mp4', import.meta.url).href,
-            thumbnailUrl: new URL('', import.meta.url).href,
+            category: 'Video Editing',
+            tags: ['Video Production', 'Marketing', 'Branding'],
+            repoUrl: '#',
         },
-                {
-            title: 'OLLA Scholar Agency Video',
-            description: '',
+        {
+            title: 'OLLA Scholar Community Engagement',
+            description: 'Video documentation of community engagement and workshop activities.',
             videoUrl: new URL('./pics/WhatsApp Vidéo 2025-11-04 à 14.33.42_9fd9c449.mp4', import.meta.url).href,
-            thumbnailUrl: new URL('', import.meta.url).href,
+            category: 'Video Editing',
+            tags: ['Video Production', 'Community Engagement', 'Documentary'],
+            repoUrl: '#',
         },
-                {
-            title: 'OLLA Scholar Agency Animated logo',
-            description: '',
+        {
+            title: 'OLLA Scholar Animated Logo',
+            description: 'Motion graphics animation featuring the OLLA Scholar Agency logo.',
             videoUrl: new URL('./pics/an_logo.mp4', import.meta.url).href,
-            thumbnailUrl: new URL('', import.meta.url).href,
+            category: 'Video Editing',
+            tags: ['Motion Graphics', 'Animation', 'Branding'],
+            repoUrl: '#',
         },
-            {
+        {
             title: 'Brand Video for GPS Traxy',
             description: 'Conceptualized, edited, and produced a promotional video for GPS Traxy, showcasing motion graphics and editing skills.',
             videoUrl: new URL('./pics/Traxy.mp4', import.meta.url).href,
-            thumbnailUrl: new URL('./pics/m1.png', import.meta.url).href,
+            category: 'Video Editing',
+            tags: ['Video Production', 'Motion Graphics', 'Corporate'],
+            repoUrl: '#',
+        },
+        {
+            title: 'Engineering Design Project',
+            description: 'A comprehensive engineering project showcasing various design iterations and 3D models created using SOLIDWORKS and Blender.',
+            images: [
+                new URL('./pics/WhatsApp Image 2025-10-30 à 20.47.42_bd4cf888.jpg', import.meta.url).href,
+                new URL('./pics/WhatsApp Image 2025-10-30 à 20.47.42_185f0cc5.jpg', import.meta.url).href,
+                new URL('./pics/WhatsApp Image 2025-10-30 à 20.47.42_8f5b7418.jpg', import.meta.url).href,
+                new URL('./pics/Untitled.png', import.meta.url).href,
+                new URL('./pics/WhatsApp Image 2025-10-30 à 20.47.42_7a15b019.jpg', import.meta.url).href
+            ],
+            category: 'Engineering',
+            tags: ['SOLIDWORKS', 'Blender', '3D Modeling', 'Engineering Design'],
+            liveUrl: '',
+            repoUrl: '#',
         },
     ],
+    videos: [],
     
     experience: [
         {
