@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
@@ -23,7 +22,7 @@ const AppContent: React.FC = () => {
       document.body.style.setProperty('--y', `${e.clientY}px`);
     };
     window.addEventListener('mousemove', handleMouseMove);
-    
+
     // Admin mode check
     const params = new URLSearchParams(window.location.search);
     if (params.get('admin') === 'true') {
@@ -36,10 +35,10 @@ const AppContent: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen font-sans">
+    <div className="min-h-screen font-sans" style={{ position: 'relative', width: '100vw', minHeight: '100vh', overflow: 'hidden' }}>
       <Header />
-      <main className="container mx-auto px-6 md:px-12">
-        <Hero />
+      <Hero />
+      <main className="container mx-auto px-6 md:px-12" style={{ position: 'relative', zIndex: 1 }}>
         <About />
         <Skills />
         <Projects />
@@ -66,7 +65,6 @@ const AppContent: React.FC = () => {
   );
 };
 
-
 const App: React.FC = () => {
   return (
     <PortfolioProvider>
@@ -74,6 +72,5 @@ const App: React.FC = () => {
     </PortfolioProvider>
   );
 };
-
 
 export default App;

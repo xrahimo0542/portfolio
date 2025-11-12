@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
 import TypeWriter from './TypeWriter';
 import ShinyText from './ShinyText';
+import { SplineScene } from './SplineScene';
 
 const Hero: React.FC = () => {
   const { portfolioData } = usePortfolio();
   const { hero } = portfolioData;
 
   return (
-    <section id="hero" className="min-h-screen flex items-center justify-center text-center">
-      <div className="max-w-3xl">
+    <section 
+      id="hero"
+      className="min-h-screen flex flex-row items-center justify-between px-8 relative overflow-hidden"
+      style={{ width: "100vw", minHeight: "100vh" }}
+    >
+      {/* Center: Hero Content */}
+      <div className="flex-1 z-10 flex flex-col items-center justify-center text-center">
         <h1 className="text-5xl md:text-7xl font-bold text-white mb-4">
           <TypeWriter 
             text={`${hero.greeting} `} 
@@ -47,6 +53,14 @@ const Hero: React.FC = () => {
             <ShinyText className="inline" speed={3}>{hero.callToAction2}</ShinyText>
           </a>
         </div>
+      </div>
+
+      {/* Right: Spline Robot */}
+      <div className="flex-none w-[40vw] h-[80vh] relative z-0 flex items-center justify-end">
+        <SplineScene
+          scene="https://prod.spline.design/LlLc5I740eRpg5sC/scene.splinecode"
+          className="w-full h-full"
+        />
       </div>
     </section>
   );
