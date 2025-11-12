@@ -58,7 +58,7 @@ const Hero: React.FC = () => {
       {/* Right: Spline Robot */}
       <div className="flex-none w-[40vw] h-[80vh] relative z-0 flex items-center justify-end">
         <SplineScene
-          scene="https://prod.spline.design/LlLc5I740eRpg5sC/scene.splinecode"
+          scene="https://prod.spline.design/UVEjadQgIeAK67IH/scene.splinecode"
           className="w-full h-full"
         />
       </div>
